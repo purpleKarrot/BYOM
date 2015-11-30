@@ -12,22 +12,22 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef BYOM_EXT_VECTOR_HPP
-#define BYOM_EXT_VECTOR_HPP
+#ifndef BYOM_EXT_QLIST_HPP
+#define BYOM_EXT_QLIST_HPP
 
 #include <byom/dynamic_view.hpp>
-#include <vector>
+#include <QList>
 
 namespace byom {
 
-template <typename T, typename A>
-struct ext<std::vector<T, A>> : detail::fallback
+template <typename T>
+struct ext<QList<T>> : detail::fallback
 {
-  using model_t = std::vector<T, A>;
+  using model_t = QList<T>;
 
   static bool empty_impl(model_t const& model)
   {
-    return model.empty();
+    return model.isEmpty();
   }
 
   static void for_each_impl(model_t const& model, visit_function const& visit)
@@ -42,4 +42,4 @@ struct ext<std::vector<T, A>> : detail::fallback
 
 } // namespace byom
 
-#endif /* BYOM_EXT_VECTOR_HPP */
+#endif /* BYOM_EXT_QLIST_HPP */

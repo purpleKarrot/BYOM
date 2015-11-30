@@ -17,6 +17,7 @@ set(test_list
   c_str
   fusion
   map
+  qlist
   qmap
   string
   vector
