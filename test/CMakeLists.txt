@@ -21,6 +21,7 @@ set(test_list
   qlist
   qmap
   qstring
+  qvariant
   string
   vector
   )
