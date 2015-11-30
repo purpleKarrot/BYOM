@@ -17,6 +17,7 @@ set(test_list
   c_str
   fusion
   map
+  qmap
   string
   vector
   )
@@ -27,10 +28,7 @@ create_test_sourcelist(test_sources
   )
 
 add_executable(byom_test_driver ${test_sources})
-target_link_libraries(byom_test_driver PRIVATE byom)
-target_compile_features(byom_test_driver PRIVATE
-  cxx_generic_lambdas
-  )
+target_link_libraries(byom_test_driver PRIVATE byom Qt5::Core)
 
 foreach(test IN LISTS test_list)
   add_test(NAME byom.${test}
