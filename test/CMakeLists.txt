@@ -19,6 +19,7 @@ set(test_list
   map
   qlist
   qmap
+  qstring
   string
   vector
   )

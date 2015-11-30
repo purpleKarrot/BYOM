@@ -13,43 +13,25 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include <byom/dynamic_view.hpp>
-#include <byom/ext/arithmetic.hpp>
-#include <byom/ext/nullptr.hpp>
-#include <byom/ext/qlist.hpp>
 #include <byom/ext/qstring.hpp>
+#include <byom/ext/nullptr.hpp>
 
 #include <boost/core/lightweight_test.hpp>
 #include <boost/lexical_cast.hpp>
 
-int qlist(int argc, char* argv[])
+int qstring(int argc, char* argv[])
 {
-  auto const model = QList<QString>{ "foo", "bar" };
+  auto const model = QString{ "John Doe" };
   auto const view = byom::dynamic_view{ model };
 
   BOOST_TEST(!view.empty());
 
-  BOOST_TEST_THROWS(boost::lexical_cast<std::string>(view),
-                    std::invalid_argument);
+  BOOST_TEST_EQ(boost::lexical_cast<std::string>(view), "John Doe");
 
   BOOST_TEST_THROWS(view.at("member"), std::invalid_argument);
 
-  int counter = 0;
-  view.for_each([&](auto const& index, auto const& elem) {
-    switch (++counter) {
-      case 1:
-        BOOST_TEST_EQ(boost::lexical_cast<std::string>(index), "0");
-        BOOST_TEST_EQ(boost::lexical_cast<std::string>(elem), "foo");
-        break;
-      case 2:
-        BOOST_TEST_EQ(boost::lexical_cast<std::string>(index), "1");
-        BOOST_TEST_EQ(boost::lexical_cast<std::string>(elem), "bar");
-        break;
-      default:
-        BOOST_ERROR("Should not be reached.");
-        break;
-    }
-  });
-  BOOST_TEST_EQ(counter, 2);
+  auto const visit = [](auto const&, auto const&) {};
+  BOOST_TEST_THROWS(view.for_each(visit), std::invalid_argument);
 
   return boost::report_errors();
 }

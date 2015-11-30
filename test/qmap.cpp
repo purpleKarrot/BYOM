@@ -13,18 +13,18 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include <byom/dynamic_view.hpp>
-#include <byom/ext/qmap.hpp>
 #include <byom/ext/nullptr.hpp>
+#include <byom/ext/qmap.hpp>
+#include <byom/ext/qstring.hpp>
 #include <byom/ext/string.hpp>
 
 #include <boost/core/lightweight_test.hpp>
 #include <boost/lexical_cast.hpp>
-#include <map>
 
 int qmap(int argc, char* argv[])
 {
   auto const model =
-    QMap<std::string, std::string>{ { "name", "John Doe" }, { "age", "42" } };
+    QMap<std::string, QString>{ { "name", "John Doe" }, { "age", "42" } };
   auto const view = byom::dynamic_view{ model };
 
   BOOST_TEST(!view.empty());
