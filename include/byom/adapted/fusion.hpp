@@ -22,8 +22,6 @@
 #include <boost/mpl/range_c.hpp>
 
 namespace byom {
-namespace ext {
-
 namespace detail {
 
 template <int N>
@@ -52,37 +50,33 @@ struct at_impl<0>
 
 } // namespace detail
 
-template <typename T,
-          typename std::enable_if<boost::fusion::traits::is_sequence<T>::value,
-                                  int>::type = 0>
-bool empty(T const& object, tag)
+template <typename Seq>
+struct ext<Seq, typename std::enable_if<
+                  boost::fusion::traits::is_sequence<Seq>::value>::type>
+  : detail::fallback
 {
-  return boost::fusion::result_of::size<T>::value == 0;
-}
+  static bool empty_impl(Seq const& model)
+  {
+    return boost::fusion::result_of::size<Seq>::value == 0;
+  }
 
-template <typename T,
-          typename std::enable_if<boost::fusion::traits::is_sequence<T>::value,
-                                  int>::type = 0>
-dynamic_view at(T const& object, std::string const& name, tag)
-{
-  using namespace boost::fusion;
-  return detail::at_impl<result_of::size<T>::value>::call(object, name);
-}
+  static dynamic_view at_impl(Seq const& model, std::string const& name)
+  {
+    using namespace boost::fusion;
+    return detail::at_impl<result_of::size<Seq>::value>::call(model, name);
+  }
 
-template <typename T,
-          typename std::enable_if<boost::fusion::traits::is_sequence<T>::value,
-                                  int>::type = 0>
-void for_each(T const& object, visit_function const& visit, tag)
-{
-  static auto constexpr size = boost::fusion::result_of::size<T>::value;
-  boost::mpl::for_each<boost::mpl::range_c<int, 0, size>>([&](auto i) {
-    using boost::fusion::extension::struct_member_name;
-    auto const name = struct_member_name<T, i>::call();
-    visit(name, boost::fusion::at_c<i>(object));
-  });
-}
+  static void for_each_impl(Seq const& model, visit_function const& visit)
+  {
+    static auto constexpr size = boost::fusion::result_of::size<Seq>::value;
+    boost::mpl::for_each<boost::mpl::range_c<int, 0, size>>([&](auto i) {
+      using boost::fusion::extension::struct_member_name;
+      auto const name = struct_member_name<Seq, i>::call();
+      visit(name, boost::fusion::at_c<i>(model));
+    });
+  }
+};
 
-} // namespace ext
 } // namespace byom
 
 #endif /* BYOM_EXT_FUSION_HPP */

@@ -13,7 +13,8 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 set(test_list
-  builtin
+  arithmetic
+  c_str
   fusion
   map
   string

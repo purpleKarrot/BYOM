@@ -19,15 +19,23 @@
 #include <string>
 
 namespace byom {
-namespace ext {
 
 template <typename C, typename T, typename A>
-bool empty(std::basic_string<C, T, A> const& object, tag)
+struct ext<std::basic_string<C, T, A>> : detail::fallback
 {
-  return object.empty();
-}
+  using model_t = std::basic_string<C, T, A>;
 
-} // namespace ext
+  static bool empty_impl(model_t const& model)
+  {
+    return model.empty();
+  }
+
+  static void print_impl(std::ostream& os, model_t const& model)
+  {
+    os << model;
+  }
+};
+
 } // namespace byom
 
 #endif /* BYOM_EXT_STRING_HPP */

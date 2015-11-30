@@ -19,25 +19,27 @@
 #include <vector>
 
 namespace byom {
-namespace ext {
 
 template <typename T, typename A>
-bool empty(std::vector<T, A> const& vector, tag)
+struct ext<std::vector<T, A>> : detail::fallback
 {
-  return vector.empty();
-}
+  using model_t = std::vector<T, A>;
 
-template <typename T, typename A>
-void for_each(std::vector<T, A> const& vector, visit_function const& visit, tag)
-{
-  std::size_t index = 0;
-  auto first = vector.begin(), last = vector.end();
-  for (; first != last; ++index, ++first) {
-    visit(index, *first);
+  static bool empty_impl(model_t const& model)
+  {
+    return model.empty();
   }
-}
 
-} // namespace ext
+  static void for_each_impl(model_t const& model, visit_function const& visit)
+  {
+    std::size_t index = 0;
+    auto first = model.begin(), last = model.end();
+    for (; first != last; ++index, ++first) {
+      visit(index, *first);
+    }
+  }
+};
+
 } // namespace byom
 
 #endif /* BYOM_EXT_VECTOR_HPP */

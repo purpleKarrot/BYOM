@@ -12,37 +12,28 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef BYOM_EXT_MAP_HPP
-#define BYOM_EXT_MAP_HPP
+#ifndef BYOM_EXT_C_STR_HPP
+#define BYOM_EXT_C_STR_HPP
 
 #include <byom/dynamic_view.hpp>
-#include <map>
+#include <ostream>
 
 namespace byom {
 
-template <typename K, typename T, typename C, typename A>
-struct ext<std::map<K, T, C, A>> : detail::fallback
+template <>
+struct ext<char const*> : detail::fallback
 {
-  using model_t = std::map<K, T, C, A>;
-
-  static bool empty_impl(model_t const& model)
+  static bool empty_impl(char const* model)
   {
-    return model.empty();
+    return !model || !model[0];
   }
 
-  static T const& at_impl(model_t const& model, std::string const& name)
+  static void print_impl(std::ostream& os, char const* model)
   {
-    return model.at(name);
-  }
-
-  static void for_each_impl(model_t const& model, visit_function const& visit)
-  {
-    for (auto const& elem : model) {
-      visit(elem.first, elem.second);
-    }
+    os << model;
   }
 };
 
 } // namespace byom
 
-#endif /* BYOM_EXT_MAP_HPP */
+#endif /* BYOM_EXT_C_STR_HPP */

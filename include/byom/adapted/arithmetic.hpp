@@ -12,21 +12,30 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef BYOM_EXT_BUILTIN_HPP
-#define BYOM_EXT_BUILTIN_HPP
+#ifndef BYOM_EXT_ARITHMETIC_HPP
+#define BYOM_EXT_ARITHMETIC_HPP
 
 #include <byom/dynamic_view.hpp>
+#include <type_traits>
+#include <ostream>
 
 namespace byom {
-namespace ext {
 
 template <typename T>
-auto empty(T const& object, tag) -> decltype(object == 0)
+struct ext<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
+  : detail::fallback
 {
-  return object == 0;
-}
+  static bool empty_impl(T const& model)
+  {
+    return model == T{};
+  }
 
-} // namespace ext
+  static void print_impl(std::ostream& os, T const& model)
+  {
+    os << model;
+  }
+};
+
 } // namespace byom
 
-#endif /* BYOM_EXT_BUILTIN_HPP */
+#endif /* BYOM_EXT_ARITHMETIC_HPP */

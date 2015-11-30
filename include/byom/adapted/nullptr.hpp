@@ -12,26 +12,29 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+#ifndef BYOM_EXT_NULLPTR_HPP
+#define BYOM_EXT_NULLPTR_HPP
+
 #include <byom/dynamic_view.hpp>
-#include <byom/adapted/builtin.hpp>
-#include <byom/adapted/ostream.hpp>
+#include <string>
+#include <ostream>
 
-#include <boost/core/lightweight_test.hpp>
-#include <boost/lexical_cast.hpp>
+namespace byom {
 
-int builtin(int argc, char* argv[])
+template <>
+struct ext<std::nullptr_t> : detail::fallback
 {
-  auto const model = 42;
-  auto const view = byom::dynamic_view{ model };
+  static bool empty_impl(std::nullptr_t)
+  {
+    return true;
+  }
 
-  BOOST_TEST(!view.empty());
+  static void print_impl(std::ostream& os, std::nullptr_t)
+  {
+    os << "null";
+  }
+};
 
-  BOOST_TEST_EQ(boost::lexical_cast<std::string>(view), "42");
+} // namespace byom
 
-  BOOST_TEST_THROWS(view.at("member"), std::invalid_argument);
-
-  auto const visit = [](auto const&, auto const&) {};
-  BOOST_TEST_THROWS(view.for_each(visit), std::invalid_argument);
-
-  return boost::report_errors();
-}
+#endif /* BYOM_EXT_NULLPTR_HPP */

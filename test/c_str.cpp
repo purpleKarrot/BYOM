@@ -12,23 +12,27 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef BYOM_EXT_OSTREAM_HPP
-#define BYOM_EXT_OSTREAM_HPP
-
 #include <byom/dynamic_view.hpp>
-#include <ostream>
+#include <byom/adapted/c_str.hpp>
+#include <byom/adapted/nullptr.hpp>
 
-namespace byom {
-namespace ext {
+#include <boost/core/lightweight_test.hpp>
+#include <boost/lexical_cast.hpp>
+#include <string>
 
-template <typename T>
-auto print(std::ostream& os, T const& object, tag)
-  -> decltype(os << object, void())
+int c_str(int argc, char* argv[])
 {
-  os << object;
+  char const* model = "John Doe";
+  auto const view = byom::dynamic_view{ model };
+
+  BOOST_TEST(!view.empty());
+
+  BOOST_TEST_EQ(boost::lexical_cast<std::string>(view), "John Doe");
+
+  BOOST_TEST_THROWS(view.at("member"), std::invalid_argument);
+
+  auto const visit = [](auto const&, auto const&) {};
+  BOOST_TEST_THROWS(view.for_each(visit), std::invalid_argument);
+
+  return boost::report_errors();
 }
-
-} // namespace ext
-} // namespace byom
-
-#endif /* BYOM_EXT_OSTREAM_HPP */

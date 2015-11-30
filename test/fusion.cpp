@@ -13,9 +13,11 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include <byom/dynamic_view.hpp>
+#include <byom/adapted/arithmetic.hpp>
+#include <byom/adapted/c_str.hpp>
 #include <byom/adapted/fusion.hpp>
-#include <byom/adapted/empty.hpp>
-#include <byom/adapted/ostream.hpp>
+#include <byom/adapted/nullptr.hpp>
+#include <byom/adapted/string.hpp>
 
 #include <boost/fusion/adapted/struct.hpp>
 #include <boost/core/lightweight_test.hpp>

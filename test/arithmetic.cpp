@@ -12,27 +12,26 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef BYOM_EXT_EMPTY_HPP
-#define BYOM_EXT_EMPTY_HPP
-
 #include <byom/dynamic_view.hpp>
+#include <byom/adapted/arithmetic.hpp>
+#include <byom/adapted/nullptr.hpp>
 
-namespace byom {
-namespace ext {
+#include <boost/core/lightweight_test.hpp>
+#include <boost/lexical_cast.hpp>
 
-template <typename T>
-auto empty(T const& object, tag) -> decltype(object.empty())
+int arithmetic(int argc, char* argv[])
 {
-  return object.empty();
+  auto const model = 42;
+  auto const view = byom::dynamic_view{ model };
+
+  BOOST_TEST(!view.empty());
+
+  BOOST_TEST_EQ(boost::lexical_cast<std::string>(view), "42");
+
+  BOOST_TEST_THROWS(view.at("member"), std::invalid_argument);
+
+  auto const visit = [](auto const&, auto const&) {};
+  BOOST_TEST_THROWS(view.for_each(visit), std::invalid_argument);
+
+  return boost::report_errors();
 }
-
-template <typename T>
-auto empty(T const& object, tag) -> decltype(empty(object))
-{
-  return empty(object);
-}
-
-} // namespace ext
-} // namespace byom
-
-#endif /* BYOM_EXT_EMPTY_HPP */
