@@ -137,6 +137,11 @@ void print_impl(std::ostream& os, T const&)
 
 #undef REQUIRE
 
+template <typename... T>
+struct wrong : std::false_type
+{
+};
+
 } // namespace detail
 
 class dynamic_view
@@ -144,11 +149,8 @@ class dynamic_view
 public:
   template <typename T>
   dynamic_view(T&& t)
+    : dynamic_view(std::forward<T>(t), std::is_lvalue_reference<T>())
   {
-    static_assert(std::is_lvalue_reference<T>(), "rvalues are not supported");
-    using model = model_t<typename std::remove_reference<T>::type>;
-    static_assert(sizeof(model) <= sizeof(data), "size mismatch");
-    new (storage()) model(t);
   }
 
   dynamic_view(dynamic_view const& x)
@@ -242,6 +244,21 @@ private:
 
     T const* object;
   };
+
+private:
+  template <typename T>
+  dynamic_view(T&& t, std::true_type)
+  {
+    using model = model_t<typename std::remove_reference<T>::type>;
+    static_assert(sizeof(model) <= sizeof(data), "size mismatch");
+    new (storage()) model(t);
+  }
+
+  template <typename T>
+  dynamic_view(T&& t, std::false_type)
+  {
+    static_assert(detail::wrong<T>::value, "rvalues are not yet supported");
+  }
 
 private:
   concept_t& object()
