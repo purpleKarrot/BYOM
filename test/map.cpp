@@ -13,9 +13,9 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include <byom/dynamic_view.hpp>
-#include <byom/adapted/map.hpp>
-#include <byom/adapted/nullptr.hpp>
-#include <byom/adapted/string.hpp>
+#include <byom/ext/map.hpp>
+#include <byom/ext/nullptr.hpp>
+#include <byom/ext/string.hpp>
 
 #include <boost/core/lightweight_test.hpp>
 #include <boost/lexical_cast.hpp>

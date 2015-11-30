@@ -13,8 +13,8 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include <byom/dynamic_view.hpp>
-#include <byom/adapted/c_str.hpp>
-#include <byom/adapted/nullptr.hpp>
+#include <byom/ext/c_str.hpp>
+#include <byom/ext/nullptr.hpp>
 
 #include <boost/core/lightweight_test.hpp>
 #include <boost/lexical_cast.hpp>
