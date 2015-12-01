@@ -15,8 +15,8 @@
 cmake_minimum_required(VERSION 3.4 FATAL_ERROR)
 project(BYOM VERSION 0.1 LANGUAGES CXX)
 
-#set(CMAKE_INCLUDE_CURRENT_DIR ON)
-#set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(Qt5Core REQUIRED)
 
 enable_testing()

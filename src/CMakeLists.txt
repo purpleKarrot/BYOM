@@ -13,6 +13,7 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 add_library(qbyom
+  qobject.cpp
   qvariant.cpp
   )
 

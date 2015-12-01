@@ -20,6 +20,7 @@ set(test_list
   qhash
   qlist
   qmap
+  qobject
   qstring
   qvariant
   string
