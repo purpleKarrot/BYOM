@@ -57,13 +57,6 @@ private:
 
 #include "qobject.moc"
 
-namespace byom {
-template <>
-struct ext<QPerson*> : ext<QObject const*>
-{
-};
-}
-
 int qobject(int argc, char* argv[])
 {
   auto* model = new QPerson;

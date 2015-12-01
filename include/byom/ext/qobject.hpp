@@ -30,6 +30,25 @@ struct ext<QObject const*> : detail::fallback
   static void for_each_impl(QObject const* model, visit_function const& visit);
 };
 
+template <>
+struct ext<QObject*> : ext<QObject const*>
+{
+};
+
+template <typename T>
+struct ext<T const*,
+           typename std::enable_if<std::is_base_of<QObject, T>::value>::type>
+  : ext<QObject const*>
+{
+};
+
+template <typename T>
+struct ext<T*,
+           typename std::enable_if<std::is_base_of<QObject, T>::value>::type>
+  : ext<QObject const*>
+{
+};
+
 } // namespace byom
 
 #endif /* BYOM_EXT_QOBJECT_HPP */
