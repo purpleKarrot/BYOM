@@ -114,7 +114,14 @@ public:
     return object().at(n);
   }
 
-  dynamic_view at(std::string const& n) const&& = delete;
+  dynamic_view at(std::string const& n) const &&
+  {
+    auto member = object().at(n);
+    if (object().owned() && !member.object().owned()) {
+      throw std::invalid_argument{ "dangling reference" };
+    }
+    return member;
+  }
 
   void for_each(visit_function const& v) const
   {
@@ -133,6 +140,7 @@ private:
     virtual ~concept_t() = default;
     virtual void clone(void* storage) const = 0;
     virtual void move_clone(void* storage) = 0;
+    virtual bool owned() const = 0;
     virtual bool empty() const = 0;
     virtual dynamic_view at(std::string const& n) const = 0;
     virtual void for_each(visit_function const& v) const = 0;
@@ -186,6 +194,11 @@ private:
       clone(storage);
     }
 
+    bool owned() const override
+    {
+      return false;
+    }
+
     T const& get() const
     {
       return object;
@@ -205,6 +218,11 @@ private:
     void clone(void* storage) const override
     {
       new (storage) local_model_t(object);
+    }
+
+    bool owned() const override
+    {
+      return true;
     }
 
     void move_clone(void* storage) override
@@ -236,6 +254,11 @@ private:
     void move_clone(void* storage) override
     {
       new (storage) remote_model_t(std::move(*this));
+    }
+
+    bool owned() const override
+    {
+      return true;
     }
 
     T const& get() const
