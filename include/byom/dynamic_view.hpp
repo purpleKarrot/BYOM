@@ -16,6 +16,7 @@
 #define BYOM_DYNAMIC_VIEW_HPP
 
 #include <string>
+#include <memory>
 #include <functional>
 #include <type_traits>
 #include <boost/type_index.hpp>
@@ -73,11 +74,6 @@ struct fallback
   }
 };
 
-template <typename... T>
-struct wrong : std::false_type
-{
-};
-
 } // namespace detail
 
 class dynamic_view
@@ -96,7 +92,7 @@ public:
 
   dynamic_view(dynamic_view&& x)
   {
-    x.object().clone(storage());
+    x.object().move_clone(storage());
   }
 
   ~dynamic_view()
@@ -113,10 +109,12 @@ public:
     return object().empty();
   }
 
-  dynamic_view at(std::string const& n) const
+  dynamic_view at(std::string const& n) const &
   {
     return object().at(n);
   }
+
+  dynamic_view at(std::string const& n) const&& = delete;
 
   void for_each(visit_function const& v) const
   {
@@ -134,6 +132,7 @@ private:
   {
     virtual ~concept_t() = default;
     virtual void clone(void* storage) const = 0;
+    virtual void move_clone(void* storage) = 0;
     virtual bool empty() const = 0;
     virtual dynamic_view at(std::string const& n) const = 0;
     virtual void for_each(visit_function const& v) const = 0;
@@ -179,7 +178,12 @@ private:
 
     void clone(void* storage) const override
     {
-      new (storage) cref_model_t(*this);
+      new (storage) cref_model_t(object);
+    }
+
+    void move_clone(void* storage) override
+    {
+      clone(storage);
     }
 
     T const& get() const
@@ -188,6 +192,58 @@ private:
     }
 
     T const& object;
+  };
+
+  template <typename T>
+  struct local_model_t : model_base_t<local_model_t, T>
+  {
+    local_model_t(T x)
+      : object(std::move(x))
+    {
+    }
+
+    void clone(void* storage) const override
+    {
+      new (storage) local_model_t(object);
+    }
+
+    void move_clone(void* storage) override
+    {
+      new (storage) local_model_t(std::move(object));
+    }
+
+    T const& get() const
+    {
+      return object;
+    }
+
+    T object;
+  };
+
+  template <typename T>
+  struct remote_model_t : model_base_t<remote_model_t, T>
+  {
+    remote_model_t(T x)
+      : object(std::make_unique<T const>(std::move(x)))
+    {
+    }
+
+    void clone(void* storage) const override
+    {
+      new (storage) remote_model_t(object);
+    }
+
+    void move_clone(void* storage) override
+    {
+      new (storage) remote_model_t(std::move(*this));
+    }
+
+    T const& get() const
+    {
+      return *object;
+    }
+
+    std::unique_ptr<T const> object;
   };
 
 private:
@@ -202,7 +258,16 @@ private:
   template <typename T>
   dynamic_view(T&& t, std::false_type)
   {
-    static_assert(detail::wrong<T>::value, "rvalues are not yet supported");
+    using local_type = local_model_t<T>;
+    using remote_type = remote_model_t<T>;
+    using use_local_type =
+      boost::mpl::bool_<(sizeof(local_type) <= sizeof(data)) &&
+                        (std::is_nothrow_copy_constructible<T>::value ||
+                         std::is_nothrow_move_constructible<T>::value)>;
+    using model =
+      typename boost::mpl::if_<use_local_type, local_type, remote_type>::type;
+    static_assert(sizeof(model) <= sizeof(data), "size mismatch");
+    new (storage()) model(std::move(t));
   }
 
 private:

@@ -21,8 +21,7 @@
 
 int arithmetic(int argc, char* argv[])
 {
-  auto const model = 42;
-  auto const view = byom::dynamic_view{ model };
+  auto const view = byom::dynamic_view{ 42 };
 
   BOOST_TEST(!view.empty());
 
