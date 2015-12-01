@@ -28,9 +28,7 @@ using visit_function =
   std::function<void(dynamic_view const&, dynamic_view const&)>;
 
 template <typename T, typename Enable = void>
-struct ext
-{
-};
+struct ext;
 
 namespace detail {
 
@@ -142,54 +140,61 @@ private:
     virtual void print(std::ostream& os) const = 0;
   };
 
-  template <typename T>
-  struct model_t : concept_t
+  template <template <typename> class Derived, typename T>
+  struct model_base_t : concept_t
   {
-    using impl = ext<typename std::remove_const<T>::type>;
+    bool empty() const override
+    {
+      return ext<T>::empty_impl(get());
+    }
 
-    model_t(T const& x)
-      : object(&x)
+    dynamic_view at(std::string const& n) const override
+    {
+      return ext<T>::at_impl(get(), n);
+    }
+
+    void for_each(visit_function const& v) const override
+    {
+      ext<T>::for_each_impl(get(), v);
+    }
+
+    void print(std::ostream& os) const override
+    {
+      ext<T>::print_impl(os, get());
+    }
+
+    T const& get() const
+    {
+      return static_cast<Derived<T> const*>(this)->get();
+    }
+  };
+
+  template <typename T>
+  struct cref_model_t : model_base_t<cref_model_t, T>
+  {
+    cref_model_t(T const& x)
+      : object(x)
     {
     }
 
     void clone(void* storage) const override
     {
-      new (storage) model_t(get());
-    }
-
-    bool empty() const override
-    {
-      return impl::empty_impl(get());
-    }
-
-    dynamic_view at(std::string const& n) const override
-    {
-      return impl::at_impl(get(), n);
-    }
-
-    void for_each(visit_function const& v) const override
-    {
-      impl::for_each_impl(get(), v);
-    }
-
-    void print(std::ostream& os) const override
-    {
-      impl::print_impl(os, get());
+      new (storage) cref_model_t(*this);
     }
 
     T const& get() const
     {
-      return *object;
+      return object;
     }
 
-    T const* object;
+    T const& object;
   };
 
 private:
   template <typename T>
   dynamic_view(T&& t, std::true_type)
   {
-    using model = model_t<typename std::remove_reference<T>::type>;
+    using model = cref_model_t<typename std::decay<T>::type>;
     static_assert(sizeof(model) <= sizeof(data), "size mismatch");
     new (storage()) model(t);
   }
