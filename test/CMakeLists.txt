@@ -32,7 +32,7 @@ create_test_sourcelist(test_sources
   )
 
 add_executable(byom_test_driver ${test_sources})
-target_link_libraries(byom_test_driver PRIVATE byom Qt5::Core)
+target_link_libraries(byom_test_driver PRIVATE byom qbyom)
 
 foreach(test IN LISTS test_list)
   add_test(NAME byom.${test}

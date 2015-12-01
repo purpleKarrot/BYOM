@@ -28,50 +28,11 @@ struct ext<QVariant>
     return model.isNull();
   }
 
-  static dynamic_view at_impl(QVariant const& model, std::string const& name)
-  {
-    throw std::invalid_argument{ "'at' needs rvalue support" };
-    //if (model.canConvert<QVariantHash>() ||
-    //model.canConvert<QVariantMap>()) {
-    //  auto iterable = model.value<QAssociativeIterable>();
-    //  for (auto i = iterable.begin(); i != iterable.end(); ++i) {
-    //    if (i.key() == QString::fromStdString(name)) {
-    //      return i.value();
-    //    }
-    //  }
-    //  throw std::out_of_range{ "out of range" };
-    //} else {
-    //}
-  }
+  static dynamic_view at_impl(QVariant const& model, std::string const& name);
 
-  static void for_each_impl(QVariant const& model, visit_function const& visit)
-  {
-    if (model.canConvert<QVariantHash>() || model.canConvert<QVariantMap>()) {
-      auto iterable = model.value<QAssociativeIterable>();
-      for (auto i = iterable.begin(); i != iterable.end(); ++i) {
-        auto const key = i.key();
-        auto const value = i.value();
-        visit(key, value);
-      }
-    } else if (model.canConvert<QVariantList>()) {
-      std::size_t index = 0;
-      for (auto const& elem : model.value<QSequentialIterable>()) {
-        visit(index, elem);
-        index += 1;
-      }
-    } else {
-      throw std::invalid_argument{ "for_each not fully implemented" };
-    }
-  }
+  static void for_each_impl(QVariant const& model, visit_function const& visit);
 
-  static void print_impl(std::ostream& os, QVariant const& model)
-  {
-    if (model.canConvert<QString>()) {
-      os << qPrintable(model.toString());
-    } else {
-      throw std::invalid_argument{ "print not fully implemented" };
-    }
-  }
+  static void print_impl(std::ostream& os, QVariant const& model);
 };
 
 } // namespace byom

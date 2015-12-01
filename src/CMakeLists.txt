@@ -12,19 +12,8 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-cmake_minimum_required(VERSION 3.4 FATAL_ERROR)
-project(BYOM VERSION 0.1 LANGUAGES CXX)
-
-#set(CMAKE_INCLUDE_CURRENT_DIR ON)
-#set(CMAKE_AUTOMOC ON)
-find_package(Qt5Core REQUIRED)
-
-enable_testing()
-add_subdirectory(src)
-add_subdirectory(test)
-
-add_library(byom INTERFACE)
-target_include_directories(byom INTERFACE include)
-target_compile_features(byom INTERFACE
-  cxx_decltype_auto
+add_library(qbyom
+  qvariant.cpp
   )
+
+target_link_libraries(qbyom PUBLIC byom Qt5::Core)

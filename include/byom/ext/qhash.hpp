@@ -17,13 +17,14 @@
 
 #include <byom/dynamic_view.hpp>
 #include <QHash>
+#include <QString>
 
 namespace byom {
 
-template <class Key, class Value>
-struct ext<QHash<Key, Value>> : detail::fallback
+template <typename Value>
+struct ext<QHash<QString, Value>> : detail::fallback
 {
-  using model_t = QHash<Key, Value>;
+  using model_t = QHash<QString, Value>;
 
   static bool empty_impl(model_t const& model)
   {
@@ -32,17 +33,16 @@ struct ext<QHash<Key, Value>> : detail::fallback
 
   static Value const& at_impl(model_t const& model, std::string const& name)
   {
-    for (auto i = model.constBegin(); i != model.constEnd(); ++i) {
-      if (i.key() == QString::fromStdString(name)) {
-        return i.value();
-      }
+    auto const it = model.find(QString::fromStdString(name));
+    if (it == model.end()) {
+      throw std::out_of_range{ "out of range" };
     }
-    throw std::out_of_range{ "out of range" };
+    return it.value();
   }
 
   static void for_each_impl(model_t const& model, visit_function const& visit)
   {
-    for (auto i = model.constBegin(); i != model.constEnd(); ++i) {
+    for (auto i = model.begin(); i != model.end(); ++i) {
       visit(i.key(), i.value());
     }
   }

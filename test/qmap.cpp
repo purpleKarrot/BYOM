@@ -24,7 +24,7 @@
 int qmap(int argc, char* argv[])
 {
   auto const model =
-    QMap<std::string, QString>{ { "name", "John Doe" }, { "age", "42" } };
+    QMap<QString, QString>{ { "name", "John Doe" }, { "age", "42" } };
   auto const view = byom::dynamic_view{ model };
 
   BOOST_TEST(!view.empty());

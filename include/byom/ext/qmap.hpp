@@ -17,13 +17,14 @@
 
 #include <byom/dynamic_view.hpp>
 #include <QMap>
+#include <QString>
 
 namespace byom {
 
-template <class Key, class Value>
-struct ext<QMap<Key, Value>> : detail::fallback
+template <typename Value>
+struct ext<QMap<QString, Value>> : detail::fallback
 {
-  using model_t = QMap<Key, Value>;
+  using model_t = QMap<QString, Value>;
 
   static bool empty_impl(model_t const& model)
   {
@@ -32,19 +33,16 @@ struct ext<QMap<Key, Value>> : detail::fallback
 
   static Value const& at_impl(model_t const& model, std::string const& name)
   {
-    // auto const elem = map.value(name);
-    // XXX: QMap returns by value; no way to outlive dynamic_view
-    for (auto i = model.constBegin(); i != model.constEnd(); ++i) {
-      if (i.key() == name) {
-        return i.value();
-      }
+    auto const it = model.find(QString::fromStdString(name));
+    if (it == model.end()) {
+      throw std::out_of_range{ "out of range" };
     }
-    throw std::out_of_range{ "out of range" };
+    return it.value();
   }
 
   static void for_each_impl(model_t const& model, visit_function const& visit)
   {
-    for (auto i = model.constBegin(); i != model.constEnd(); ++i) {
+    for (auto i = model.begin(); i != model.end(); ++i) {
       visit(i.key(), i.value());
     }
   }

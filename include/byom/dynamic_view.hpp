@@ -230,7 +230,7 @@ private:
 
     void clone(void* storage) const override
     {
-      new (storage) remote_model_t(object);
+      new (storage) remote_model_t(get());
     }
 
     void move_clone(void* storage) override
@@ -258,8 +258,8 @@ private:
   template <typename T>
   dynamic_view(T&& t, std::false_type)
   {
-    using local_type = local_model_t<T>;
-    using remote_type = remote_model_t<T>;
+    using local_type = local_model_t<typename std::decay<T>::type>;
+    using remote_type = remote_model_t<typename std::decay<T>::type>;
     using use_local_type =
       boost::mpl::bool_<(sizeof(local_type) <= sizeof(data)) &&
                         (std::is_nothrow_copy_constructible<T>::value ||

@@ -35,13 +35,13 @@ int qvariant(int argc, char* argv[])
   BOOST_TEST_THROWS(boost::lexical_cast<std::string>(view),
                     std::invalid_argument);
 
-//  auto const name = view.at("name");
-//  BOOST_TEST_EQ(boost::lexical_cast<std::string>(name), "John Doe");
-//
-//  auto const age = view.at("age");
-//  BOOST_TEST_EQ(boost::lexical_cast<std::string>(age), "42");
-//
-//  BOOST_TEST_THROWS(view.at("bar"), std::out_of_range);
+  auto const name = view.at("name");
+  BOOST_TEST_EQ(boost::lexical_cast<std::string>(name), "John Doe");
+
+  auto const age = view.at("age");
+  BOOST_TEST_EQ(boost::lexical_cast<std::string>(age), "42");
+
+  BOOST_TEST_THROWS(view.at("bar"), std::out_of_range);
 
   int called = 0;
   view.for_each([&](auto const& key, auto const& val) {
