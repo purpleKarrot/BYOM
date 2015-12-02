@@ -15,10 +15,9 @@
 #ifndef BYOM_EXT_QSTRING_HPP
 #define BYOM_EXT_QSTRING_HPP
 
-#include <byom/dynamic_view.hpp>
 #include <byom/ext/fallback.hpp>
-#include <ostream>
 #include <QString>
+#include <ostream>
 
 namespace byom {
 

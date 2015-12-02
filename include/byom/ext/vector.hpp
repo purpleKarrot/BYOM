@@ -15,7 +15,7 @@
 #ifndef BYOM_EXT_VECTOR_HPP
 #define BYOM_EXT_VECTOR_HPP
 
-#include <byom/dynamic_view.hpp>
+#include <byom/ext/arithmetic.hpp>
 #include <byom/ext/fallback.hpp>
 #include <vector>
 

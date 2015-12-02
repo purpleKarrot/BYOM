@@ -12,13 +12,8 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-#include <_test.hpp>
-#include <byom/ext/qlist.hpp>
-#include <byom/ext/qstring.hpp>
+#include <byom/dynamic_view.hpp>
 
-int qlist(int argc, char* argv[])
-{
-  auto const model = QList<QString>{ "foo", "bar" };
-
-  return test_seq(model);
-}
+int test_map(byom::dynamic_view const& view);
+int test_seq(byom::dynamic_view const& view);
+int test_val(byom::dynamic_view const& view, char const* val);

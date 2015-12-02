@@ -32,7 +32,7 @@ create_test_sourcelist(test_sources
   ${test_list}
   )
 
-add_executable(byom_test_driver ${test_sources})
+add_executable(byom_test_driver _test.cpp _test.hpp ${test_sources})
 target_link_libraries(byom_test_driver PRIVATE byom qbyom)
 
 foreach(test IN LISTS test_list)

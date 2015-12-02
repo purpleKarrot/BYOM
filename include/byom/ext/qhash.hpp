@@ -15,10 +15,9 @@
 #ifndef BYOM_EXT_QHASH_HPP
 #define BYOM_EXT_QHASH_HPP
 
-#include <byom/dynamic_view.hpp>
 #include <byom/ext/fallback.hpp>
+#include <byom/ext/qstring.hpp>
 #include <QHash>
-#include <QString>
 
 namespace byom {
 
