@@ -45,6 +45,18 @@ public:
   {
   }
 
+  template <typename T>
+  dynamic_view(T* t)
+  {
+    new (storage()) local_model_t<T*>(t);
+  }
+
+  template <typename T>
+  dynamic_view(T const* t)
+  {
+    new (storage()) local_model_t<T const*>(t);
+  }
+
   dynamic_view(dynamic_view const& x)
   {
     x.object().clone(storage());
