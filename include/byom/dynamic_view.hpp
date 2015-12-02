@@ -100,6 +100,15 @@ public:
     object().for_each(v);
   }
 
+  template <typename T>
+  T get() const
+  {
+    if (object().type() != typeid(T)) {
+      throw std::bad_cast{ "bad cast" };
+    }
+    return *reinterpret_cast<T const*>(object().data());
+  }
+
   friend std::ostream& operator<<(std::ostream& os, dynamic_view const& self)
   {
     self.object().print(os);
@@ -113,6 +122,8 @@ private:
     virtual void clone(void* storage) const = 0;
     virtual void move_clone(void* storage) = 0;
     virtual bool owned() const = 0;
+    virtual const std::type_info& type() const = 0;
+    virtual void const* data() const = 0;
     virtual bool empty() const = 0;
     virtual dynamic_view at(std::string const& n) const = 0;
     virtual void for_each(visit_function const& v) const = 0;
@@ -122,6 +133,16 @@ private:
   template <template <typename> class Derived, typename T>
   struct model_base_t : concept_t
   {
+    const std::type_info& type() const override
+    {
+      return typeid(T);
+    }
+
+    void const* data() const override
+    {
+      return &get();
+    }
+
     bool empty() const override
     {
       return ext<T>::empty_impl(get());
