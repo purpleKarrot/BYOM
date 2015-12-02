@@ -34,8 +34,12 @@ struct ext;
 
 class dynamic_view
 {
-public:
   template <typename T>
+  using no_copy_ctor = typename std::enable_if<!std::is_same<
+    typename std::remove_reference<T>::type, dynamic_view>::value>::type;
+
+public:
+  template <typename T, typename Enable = no_copy_ctor<T>>
   dynamic_view(T&& t)
     : dynamic_view(std::forward<T>(t), std::is_lvalue_reference<T>())
   {
