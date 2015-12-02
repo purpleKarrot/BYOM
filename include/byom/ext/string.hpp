@@ -31,6 +31,21 @@ struct ext<std::basic_string<C, T, A>> : detail::fallback
     return model.empty();
   }
 
+  static unsigned long long int to_integral(model_t const& model)
+  {
+    return std::stoull(model);
+  }
+
+  static long double to_floating_point(model_t const& model)
+  {
+    return std::stold(model);
+  }
+
+  static std::string to_string(model_t const& model)
+  {
+    return model;
+  }
+
   static void print_impl(std::ostream& os, model_t const& model)
   {
     os << model;

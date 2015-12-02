@@ -29,6 +29,21 @@ struct ext<QString> : detail::fallback
     return model.isEmpty();
   }
 
+  static unsigned long long int to_integral(QString const& model)
+  {
+    return model.toULongLong();
+  }
+
+  static long double to_floating_point(QString const& model)
+  {
+    return model.toDouble();
+  }
+
+  static std::string to_string(QString const& model)
+  {
+    return model.toStdString();
+  }
+
   static void print_impl(std::ostream& os, QString const& model)
   {
     os << qPrintable(model);

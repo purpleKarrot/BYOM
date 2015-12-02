@@ -29,6 +29,21 @@ struct ext<char const*> : detail::fallback
     return !model || !model[0];
   }
 
+  static unsigned long long int to_integral(char const* model)
+  {
+    return std::stoull(model);
+  }
+
+  static long double to_floating_point(char const* model)
+  {
+    return std::stold(model);
+  }
+
+  static std::string to_string(char const* model)
+  {
+    return model;
+  }
+
   static void print_impl(std::ostream& os, char const* model)
   {
     os << model;

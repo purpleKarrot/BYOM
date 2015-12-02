@@ -31,6 +31,21 @@ struct ext<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
     return model == T{};
   }
 
+  static unsigned long long int to_integral(T const& model)
+  {
+    return model;
+  }
+
+  static long double to_floating_point(T const& model)
+  {
+    return model;
+  }
+
+  static std::string to_string(T const& model)
+  {
+    return std::to_string(model);
+  }
+
   static void print_impl(std::ostream& os, T const& model)
   {
     os << model;

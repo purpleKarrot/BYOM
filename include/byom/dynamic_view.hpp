@@ -125,6 +125,9 @@ private:
     virtual bool empty() const = 0;
     virtual dynamic_view at(std::string const& n) const = 0;
     virtual void for_each(visit_function const& v) const = 0;
+    virtual unsigned long long int to_integral() const = 0;
+    virtual long double to_floating_point() const = 0;
+    virtual std::string to_string() const = 0;
     virtual void print(std::ostream& os) const = 0;
   };
 
@@ -154,6 +157,21 @@ private:
     void for_each(visit_function const& v) const override
     {
       ext<T>::for_each_impl(get(), v);
+    }
+
+    unsigned long long int to_integral() const override
+    {
+      return ext<T>::to_integral(get());
+    }
+
+    long double to_floating_point() const override
+    {
+      return ext<T>::to_floating_point(get());
+    }
+
+    std::string to_string() const override
+    {
+      return ext<T>::to_string(get());
     }
 
     void print(std::ostream& os) const override
@@ -270,6 +288,36 @@ private:
         throw std::bad_cast{ "bad cast" };
       }
       return *reinterpret_cast<T const*>(object.data());
+    }
+  };
+
+  template <typename T>
+  struct cast_helper<T,
+                     typename std::enable_if<std::is_integral<T>::value>::type>
+  {
+    static T cast(concept_t const& object)
+    {
+      return static_cast<T>(object.to_integral());
+    }
+  };
+
+  template <typename T>
+  struct cast_helper<
+    T, typename std::enable_if<std::is_floating_point<T>::value>::type>
+  {
+    static T cast(concept_t const& object)
+    {
+      return static_cast<T>(object.to_floating_point());
+    }
+  };
+
+  template <typename T>
+  struct cast_helper<
+    T, typename std::enable_if<std::is_same<T, std::string>::value>::type>
+  {
+    static T cast(concept_t const& object)
+    {
+      return object.to_string();
     }
   };
 

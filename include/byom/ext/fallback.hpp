@@ -54,6 +54,33 @@ struct fallback
   }
 
   template <typename T>
+  static unsigned long long int to_integral(T const&)
+  {
+    using boost::typeindex::type_id_with_cvr;
+    throw std::invalid_argument{ "'to_integral(" +
+                                 type_id_with_cvr<T const&>().pretty_name() +
+                                 ")' is not implemented" };
+  }
+
+  template <typename T>
+  static long double to_floating_point(T const&)
+  {
+    using boost::typeindex::type_id_with_cvr;
+    throw std::invalid_argument{ "'to_floating_point(" +
+                                 type_id_with_cvr<T const&>().pretty_name() +
+                                 ")' is not implemented" };
+  }
+
+  template <typename T>
+  static std::string to_string(T const&)
+  {
+    using boost::typeindex::type_id_with_cvr;
+    throw std::invalid_argument{ "'to_string(" +
+                                 type_id_with_cvr<T const&>().pretty_name() +
+                                 ")' is not implemented" };
+  }
+
+  template <typename T>
   static void print_impl(std::ostream& os, T const&)
   {
     using boost::typeindex::type_id_with_cvr;

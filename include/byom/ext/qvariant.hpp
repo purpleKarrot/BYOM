@@ -32,6 +32,21 @@ struct ext<QVariant>
 
   static void for_each_impl(QVariant const& model, visit_function const& visit);
 
+  static unsigned long long int to_integral(QVariant const& model)
+  {
+    return model.toULongLong();
+  }
+
+  static long double to_floating_point(QVariant const& model)
+  {
+    return model.toDouble();
+  }
+
+  static std::string to_string(QVariant const& model)
+  {
+    return model.toString().toStdString();
+  }
+
   static void print_impl(std::ostream& os, QVariant const& model);
 };
 
