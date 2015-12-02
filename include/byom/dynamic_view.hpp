@@ -19,6 +19,7 @@
 #include <memory>
 #include <functional>
 #include <type_traits>
+#include <stdexcept>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/if.hpp>
 
@@ -103,10 +104,7 @@ public:
   template <typename T>
   T get() const
   {
-    if (object().type() != typeid(T)) {
-      throw std::bad_cast{ "bad cast" };
-    }
-    return *reinterpret_cast<T const*>(object().data());
+    return cast_helper<T>::cast(object());
   }
 
   friend std::ostream& operator<<(std::ostream& os, dynamic_view const& self)
@@ -260,6 +258,19 @@ private:
     }
 
     std::unique_ptr<T const> object;
+  };
+
+private:
+  template <typename T, typename Enable = void>
+  struct cast_helper
+  {
+    static T cast(concept_t const& object)
+    {
+      if (object.type() != typeid(T)) {
+        throw std::bad_cast{ "bad cast" };
+      }
+      return *reinterpret_cast<T const*>(object.data());
+    }
   };
 
 private:
