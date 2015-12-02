@@ -16,7 +16,6 @@
 #include <byom/ext/arithmetic.hpp>
 #include <byom/ext/c_str.hpp>
 #include <byom/ext/fusion.hpp>
-#include <byom/ext/nullptr.hpp>
 #include <byom/ext/string.hpp>
 
 #include <boost/fusion/adapted/struct.hpp>

@@ -15,7 +15,7 @@
 #include <byom/ext/qobject.hpp>
 #include <byom/ext/qvariant.hpp>
 #include <byom/ext/c_str.hpp>
-#include <byom/ext/nullptr.hpp>
+#include <byom/ext/fallback.hpp>
 #include <QMetaProperty>
 
 namespace byom {

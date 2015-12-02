@@ -14,7 +14,6 @@
 
 #include <byom/dynamic_view.hpp>
 #include <byom/ext/arithmetic.hpp>
-#include <byom/ext/nullptr.hpp>
 #include <byom/ext/qlist.hpp>
 #include <byom/ext/qstring.hpp>
 

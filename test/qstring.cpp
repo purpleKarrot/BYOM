@@ -14,7 +14,6 @@
 
 #include <byom/dynamic_view.hpp>
 #include <byom/ext/qstring.hpp>
-#include <byom/ext/nullptr.hpp>
 
 #include <boost/core/lightweight_test.hpp>
 #include <boost/lexical_cast.hpp>

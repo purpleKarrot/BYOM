@@ -16,6 +16,7 @@
 #define BYOM_EXT_QOBJECT_HPP
 
 #include <byom/dynamic_view.hpp>
+#include <byom/ext/fallback.hpp>
 #include <QObject>
 
 namespace byom {

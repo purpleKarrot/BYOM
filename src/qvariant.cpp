@@ -16,7 +16,7 @@
 #include <byom/ext/qhash.hpp>
 #include <byom/ext/qmap.hpp>
 #include <byom/ext/arithmetic.hpp>
-#include <byom/ext/nullptr.hpp>
+#include <byom/ext/fallback.hpp>
 
 namespace byom {
 

@@ -14,7 +14,6 @@
 
 #include <byom/dynamic_view.hpp>
 #include <byom/ext/map.hpp>
-#include <byom/ext/nullptr.hpp>
 #include <byom/ext/string.hpp>
 
 #include <boost/core/lightweight_test.hpp>

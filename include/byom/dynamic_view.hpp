@@ -19,7 +19,8 @@
 #include <memory>
 #include <functional>
 #include <type_traits>
-#include <boost/type_index.hpp>
+#include <boost/mpl/bool.hpp>
+#include <boost/mpl/if.hpp>
 
 namespace byom {
 
@@ -30,51 +31,6 @@ using visit_function =
 
 template <typename T, typename Enable = void>
 struct ext;
-
-namespace detail {
-
-struct fallback
-{
-  template <typename T>
-  static bool empty_impl(T const&)
-  {
-    using boost::typeindex::type_id_with_cvr;
-    throw std::invalid_argument{ "'empty(" +
-                                 type_id_with_cvr<T const&>().pretty_name() +
-                                 ")' is not implemented" };
-  }
-
-  template <typename T, typename K>
-  static std::nullptr_t const& at_impl(T const&, K const&)
-  {
-    using boost::typeindex::type_id_with_cvr;
-    throw std::invalid_argument{
-      "'at(" + type_id_with_cvr<T const&>().pretty_name() + ", " +
-      type_id_with_cvr<K const&>().pretty_name() + ")' is not implemented"
-    };
-  }
-
-  template <typename T>
-  static void for_each_impl(T const&, visit_function const&)
-  {
-    using boost::typeindex::type_id_with_cvr;
-    throw std::invalid_argument{
-      "'for_each(" + type_id_with_cvr<T const&>().pretty_name() +
-      ", byom::visit_function const&)' is not implemented"
-    };
-  }
-
-  template <typename T>
-  static void print_impl(std::ostream& os, T const&)
-  {
-    using boost::typeindex::type_id_with_cvr;
-    throw std::invalid_argument{ "'print(std::ostream&, " +
-                                 type_id_with_cvr<T const&>().pretty_name() +
-                                 ")' is not implemented" };
-  }
-};
-
-} // namespace detail
 
 class dynamic_view
 {

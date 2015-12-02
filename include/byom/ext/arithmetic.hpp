@@ -16,6 +16,7 @@
 #define BYOM_EXT_ARITHMETIC_HPP
 
 #include <byom/dynamic_view.hpp>
+#include <byom/ext/fallback.hpp>
 #include <type_traits>
 #include <ostream>
 

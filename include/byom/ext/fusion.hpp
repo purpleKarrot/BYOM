@@ -15,6 +15,7 @@
 #ifndef BYOM_EXT_FUSION_HPP
 #define BYOM_EXT_FUSION_HPP
 
+#include <byom/ext/fallback.hpp>
 #include <boost/fusion/adapted/struct.hpp>
 #include <boost/fusion/sequence/intrinsic/at_c.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>

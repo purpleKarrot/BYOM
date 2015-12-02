@@ -13,7 +13,6 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include <byom/dynamic_view.hpp>
-#include <byom/ext/nullptr.hpp>
 #include <byom/ext/qmap.hpp>
 #include <byom/ext/qstring.hpp>
 #include <byom/ext/string.hpp>
