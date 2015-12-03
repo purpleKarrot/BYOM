@@ -24,6 +24,7 @@ set(test_list
   qstring
   qvariant
   string
+  tuple
   vector
   )
 
