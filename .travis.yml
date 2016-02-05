@@ -1,0 +1,50 @@
+language: cpp
+sudo: false
+
+matrix:
+  include:
+    - env: BUILD_TYPE=Debug COMPILER=clang++-3.7
+      compiler: clang
+      addons: &clang
+        apt:
+          packages:
+            - clang-3.7
+            - g++-5
+            - libboost-dev
+            - qtbase5-dev
+          sources: &sources
+            - llvm-toolchain-precise-3.7
+            - ubuntu-sdk-team
+            - ubuntu-toolchain-r-test
+    - env: BUILD_TYPE=Release COMPILER=clang++-3.7
+      compiler: clang
+      addons: *clang
+    - env: BUILD_TYPE=Debug COMPILER=g++-5
+      compiler: gcc
+      addons: &gcc
+        apt:
+          packages:
+            - g++-5
+            - libboost-dev
+            - qtbase5-dev
+          sources: *sources
+    - env: BUILD_TYPE=Release COMPILER=g++-5
+      compiler: gcc
+      addons: *gcc
+
+install:
+  - CMAKE_URL="https://cmake.org/files/v3.4/cmake-3.4.3-Linux-x86_64.tar.gz"
+  - mkdir .local
+  - travis_retry wget --no-check-certificate --quiet -O - $CMAKE_URL | tar --strip-components=1 -xz -C .local
+  - export PATH=$TRAVIS_BUILD_DIR/.local/bin:$PATH
+
+before_script:
+  - cmake --version
+  - $COMPILER --version
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_COMPILER=$COMPILER ..
+
+script:
+  - make -j2 VERBOSE=1
+  - ctest --output-on-failure
